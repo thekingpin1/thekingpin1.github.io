@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Blog Experience</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            color: white;
+        }
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        .content {
+            position: relative;
+            z-index: 1;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(0, 10, 20, 0.7);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            margin-top: 100px;
+            box-shadow: 0 0 15px rgba(0, 200, 100, 0.5);
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 20px;
+            background-color: rgba(0, 20, 40, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 10;
+            box-shadow: 0 0 10px rgba(0, 150, 100, 0.6);
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        nav ul li {
+            margin-left: 20px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        nav a:hover {
+            color: #00ff80;
+        }
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        h1, h2, h3 {
+            color: #00ff80;
+        }
+        .article {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #004444;
+        }
+        .article-meta {
+            color: #0088ff;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 20, 30, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(0, 255, 150, 0.7);
+        }
+        .admin-panel h2 {
+            margin-top: 0;
+        }
+        .admin-panel textarea {
+            width: 100%;
+            height: 300px;
+            background-color: rgba(0, 30, 40, 1);
+            color: white;
+            border: 1px solid #006666;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .admin-panel input[type="text"] {
+            width: 100%;
+            background-color: rgba(0, 30, 40, 1);
+            color: white;
+            border: 1px solid #006666;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .admin-panel button {
+            background-color: #005566;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .admin-panel button:hover {
+            background-color: #007788;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 99;
+        }
+        .admin-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #001122;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .admin-link:hover {
+            background-color: #002244;
+        }
+        .close-admin {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #001122;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+            font-size: 24px;
+            flex-direction: column;
+        }
+        .loading-bar {
+            width: 300px;
+            height: 10px;
+            background-color: #001133;
+            border-radius: 5px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        .loading-progress {
+            height: 100%;
+            width: 0%;
+            background-color: #00aa88;
+            transition: width 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading">
+        <div>Loading Your 3D Blog Experience...</div>
+        <div class="loading-bar">
+            <div class="loading-progress" id="loadingProgress"></div>
+        </div>
+    </div>
+
+    <header>
+        <nav>
+            <div class="logo">3D Blog</div>
+            <ul>
+                <li><a href="#" class="nav-link" data-page="home">Home</a></li>
+                <li><a href="#" class="nav-link" data-page="about">About</a></li>
+                <li><a href="#" class="nav-link" data-page="articles">Articles</a></li>
+                <li><a href="#" class="nav-link" data-page="contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="content" id="content">
+        <!-- Content will be loaded here -->
+    </div>
+
+    <a href="#" class="admin-link" id="adminLink">Admin</a>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="admin-panel" id="adminPanel">
+        <button class="close-admin" id="closeAdmin">×</button>
+        <h2>Admin Panel</h2>
+        <div>
+            <h3>Add New Article</h3>
+            <input type="text" id="articleTitle" placeholder="Article Title">
+            <textarea id="articleContent" placeholder="Article Content (Markdown supported)"></textarea>
+            <button id="saveArticle">Save Article</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.2/marked.min.js"></script>
+    <script>
+        // Global variables
+        let camera, scene, renderer;
+        let particles, particlesGeometry;
+        let clock = new THREE.Clock();
+        let mouseX = 0, mouseY = 0;
+        let windowHalfX = window.innerWidth / 2;
+        let windowHalfY = window.innerHeight / 2;
+        let targetRotation = 0;
+        let blogData = {
+            articles: [
+                {
+                    id: 1,
+                    title: "Welcome to My 3D Blog",
+                    date: "March 17, 2025",
+                    content: "# Welcome to My 3D Blog\n\nThis is my first article on this amazing Three.js powered blog. I'm excited to share my thoughts and ideas in this beautiful 3D environment.\n\n## What to Expect\n\nIn this blog, I'll be writing about:\n\n- Creative coding\n- Web development\n- My personal projects\n- Thoughts on technology\n\nStay tuned for more content coming soon!",
+                },
+                {
+                    id: 2,
+                    title: "The Beauty of Three.js",
+                    date: "March 18, 2025",
+                    content: "# The Beauty of Three.js\n\nThree.js is a powerful JavaScript library that makes it easy to create 3D graphics in the browser. It abstracts away the complexities of WebGL and provides a simple API for creating stunning visualizations.\n\n## Why I Love Three.js\n\nThree.js allows me to express my creativity in ways that traditional web development can't. The ability to create immersive 3D experiences directly in the browser is truly revolutionary.\n\nI'm looking forward to exploring more of its capabilities in future projects!"
+                }
+            ],
+            pages: {
+                home: "# Welcome to My 3D Blog\n\nThis is a personal blog built with Three.js, featuring a beautiful 3D background animation with particles that react to your mouse movements.\n\n## Latest Articles\n\n<div id='latest-articles'></div>",
+                about: "# About Me\n\nI'm a passionate developer and writer who loves exploring the intersection of technology and creativity. This blog is my space to share my thoughts, projects, and experiences.\n\n## My Background\n\nI've been working in web development for several years, with a particular interest in creative coding and interactive experiences. Three.js has become one of my favorite tools for bringing ideas to life in the browser.",
+                contact: "# Get In Touch\n\nI'd love to hear from you! You can reach me through any of these channels:\n\n- Email: example@email.com\n- Twitter: @example\n- GitHub: github.com/example",
+            }
+        };
+
+        // Initialize the loading screen
+        const loadingScreen = document.querySelector('.loading');
+        const loadingProgress = document.getElementById('loadingProgress');
+        let loadingPercentage = 0;
+        const loadingInterval = setInterval(() => {
+            loadingPercentage += 1;
+            loadingProgress.style.width = `${loadingPercentage}%`;
+            if (loadingPercentage >= 100) {
+                clearInterval(loadingInterval);
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 500);
+            }
+        }, 30);
+
+        // Initialize the scene
+        init();
+        animate();
+
+        // Load the initial content
+        loadPage('home');
+
+        // Event listeners
+        document.addEventListener('mousemove', onDocumentMouseMove);
+        window.addEventListener('resize', onWindowResize);
+        
+        // Navigation links
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = e.target.getAttribute('data-page');
+                loadPage(page);
+            });
+        });
+
+        // Admin panel
+        document.getElementById('adminLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'block';
+        });
+
+        document.getElementById('closeAdmin').addEventListener('click', () => {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('adminPanel').style.display = 'none';
+        });
+
+        document.getElementById('saveArticle').addEventListener('click', saveArticle);
+
+        // Functions
+        function init() {
+            // Create the camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
+            camera.position.z = 1000;
+
+            // Create the scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x000a14);
+            scene.fog = new THREE.FogExp2(0x000a14, 0.0007);
+
+            // Create particles
+            particlesGeometry = new THREE.BufferGeometry();
+            const particleCount = 5000;
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            const sizes = new Float32Array(particleCount);
+
+            const color1 = new THREE.Color(0x003366); // Dark blue
+            const color2 = new THREE.Color(0x006633); // Dark green
+            const color3 = new THREE.Color(0x000000); // Black
+
+            for (let i = 0; i < particleCount; i++) {
+                // Position
+                positions[i * 3] = (Math.random() - 0.5) * 2000;
+                positions[i * 3 + 1] = (Math.random() - 0.5) * 2000;
+                positions[i * 3 + 2] = (Math.random() - 0.5) * 2000;
+
+                // Color
+                const colorRandom = Math.random();
+                let particleColor;
+                if (colorRandom < 0.33) {
+                    particleColor = color1;
+                } else if (colorRandom < 0.66) {
+                    particleColor = color2;
+                } else {
+                    particleColor = color3;
+                }
+
+                colors[i * 3] = particleColor.r;
+                colors[i * 3 + 1] = particleColor.g;
+                colors[i * 3 + 2] = particleColor.b;
+
+                // Size
+                sizes[i] = Math.random() * 5 + 1;
+            }
+
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            particlesGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+            // Create material
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 5,
+                sizeAttenuation: true,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8
+            });
+
+            // Create points
+            particles = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particles);
+
+            // Create renderer
+            renderer = new THREE.WebGLRenderer();
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            render();
+        }
+
+        function render() {
+            const time = clock.getElapsedTime() * 0.1;
+
+            // Rotate particles
+            particles.rotation.x = time * 0.1;
+            particles.rotation.y = time * 0.05;
