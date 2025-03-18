@@ -3,826 +3,657 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>opine</title>
+    <title>Japanese Market Blog</title>
     <style>
-        /* CSS Variables for our color scheme */
-        :root {
-            /* Blue shades */
-            --blue-dark: #1a365d;
-            --blue-medium: #2a4a7f;
-            --blue-light: #4a69bd;
-            --blue-lighter: #6889d5;
-            
-            /* Black shades */
-            --black-pure: #000000;
-            --black-dark: #121212;
-            --black-medium: #222222;
-            --black-light: #333333;
-            
-            /* Green shades */
-            --green-dark: #0a4b33;
-            --green-medium: #0c744d;
-            --green-light: #10b981;
-            --green-lighter: #34d399;
-            
-            /* Pure white for all text */
-            --text-white: #ffffff;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
-        
         body {
-            background-color: var(--black-dark);
-            color: var(--text-white);
-            overflow-x: hidden;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            color: white;
+            background-color: #001428;
         }
-        
-        /* Header styling */
-        header {
-            background-color: var(--black-medium);
-            position: fixed;
-            width: 100%;
-            z-index: 100;
-            transition: all 0.4s ease;
-        }
-        
-        header.scrolled {
-            background-color: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-        }
-        
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-white);
-            text-decoration: none;
-            letter-spacing: -0.5px;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-        
-        .nav-links a {
-            color: var(--text-white);
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 0;
-            background-color: var(--green-light);
-            transition: width 0.3s ease;
-        }
-        
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-        
-        /* Hero section */
-        .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            background-color: var(--black-dark);
-            padding: 0 2rem;
-        }
-        
-        .hero-content {
-            max-width: 1200px;
-            z-index: 1;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 1s forwards 0.5s;
-        }
-        
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 700;
-            color: var(--text-white);
-            margin-bottom: 1rem;
-            line-height: 1.1;
-            /* Changed from gradient text to white text with text shadow for depth */
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-        
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--text-white);
-            max-width: 600px;
-            margin-bottom: 2rem;
-            line-height: 1.6;
-        }
-        
-        .cta-button {
-            display: inline-block;
-            padding: 0.8rem 2rem;
-            background-color: var(--green-medium);
-            color: var(--text-white);
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-        
-        .cta-button:hover {
-            background-color: var(--green-light);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-        }
-        
-        .hero-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-        }
-        
-        .circle {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.4;
-            transition: all 1.5s ease;
-        }
-        
-        .circle-1 {
-            width: 400px;
-            height: 400px;
-            background-color: var(--blue-dark);
-            top: -100px;
-            right: -100px;
-            animation: floatAnimation 8s infinite alternate;
-        }
-        
-        .circle-2 {
-            width: 500px;
-            height: 500px;
-            background-color: var(--green-dark);
-            bottom: -200px;
-            left: -150px;
-            animation: floatAnimation 10s infinite alternate-reverse;
-        }
-        
-        .circle-3 {
-            width: 300px;
-            height: 300px;
-            background-color: var(--blue-medium);
-            top: 40%;
-            right: 25%;
-            animation: floatAnimation 7s infinite alternate;
-        }
-        
-        /* Latest Articles Section */
-        .articles-section {
-            padding: 5rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-            background-color: var(--black-dark);
-        }
-        
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            text-align: center;
-            color: var(--text-white);
-            position: relative;
-            padding-bottom: 1rem;
-        }
-        
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: linear-gradient(to right, var(--blue-medium), var(--green-medium));
-        }
-        
-        .articles-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        
-        .article-card {
-            background-color: var(--black-light);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s ease;
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        
-        .article-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
-        }
-        
-        .article-img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-        
-        .article-content {
-            padding: 1.5rem;
-        }
-        
-        .article-category {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            background-color: var(--blue-dark);
-            color: var(--text-white);
-            border-radius: 30px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            margin-bottom: 1rem;
-        }
-        
-        .article-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 0.8rem;
-            color: var(--text-white);
-            line-height: 1.4;
-        }
-        
-        .article-excerpt {
-            font-size: 0.95rem;
-            color: var(--text-white);
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-        
-        .article-meta {
-            display: flex;
-            align-items: center;
-            font-size: 0.85rem;
-            color: var(--text-white);
-            opacity: 0.8;
-        }
-        
-        .article-date {
-            margin-right: 1rem;
-        }
-        
-        .article-read-time::before {
-            content: "•";
-            margin-right: 0.5rem;
-        }
-        
-        /* Featured Writing Section */
-        .featured-section {
-            padding: 5rem 2rem;
-            background-color: var(--blue-dark);
-            color: var(--text-white);
-        }
-        
-        .featured-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .featured-title {
-            color: var(--text-white);
-        }
-        
-        .featured-content {
-            display: flex;
-            flex-direction: column;
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        
-        .featured-item {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        
-        .featured-item:nth-child(even) {
-            direction: rtl;
-        }
-        
-        .featured-item:nth-child(even) .featured-item-content {
-            direction: ltr;
-        }
-        
-        .featured-item-img {
+        #market-scene {
             width: 100%;
             height: 400px;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            display: block;
         }
-        
-        .featured-item-content h3 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            line-height: 1.3;
-            color: var(--text-white);
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-        
-        .featured-item-content p {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            color: var(--text-white);
-            margin-bottom: 1.5rem;
-        }
-        
-        .read-more {
-            display: inline-flex;
-            align-items: center;
-            color: var(--green-lighter);
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-        
-        .read-more:hover {
-            color: var(--text-white);
-        }
-        
-        .read-more span {
-            margin-left: 0.5rem;
-            transition: all 0.3s ease;
-        }
-        
-        .read-more:hover span {
-            transform: translateX(5px);
-        }
-        
-        /* Newsletter Section */
-        .newsletter-section {
-            padding: 6rem 2rem;
-            background: linear-gradient(135deg, var(--green-dark), var(--black-medium));
-            color: var(--text-white);
-        }
-        
-        .newsletter-container {
+        #content {
+            width: 80%;
             max-width: 800px;
             margin: 0 auto;
+            padding: 30px;
+            background-color: rgba(0, 10, 30, 0.8);
+            border-radius: 10px;
+        }
+        header {
             text-align: center;
+            margin-bottom: 20px;
         }
-        
-        .newsletter-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--text-white);
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #4eff91;
         }
-        
-        .newsletter-description {
-            font-size: 1.1rem;
-            line-height: 1.7;
-            margin-bottom: 2rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            color: var(--text-white);
-        }
-        
-        .newsletter-form {
+        nav {
             display: flex;
-            max-width: 500px;
-            margin: 0 auto;
-            gap: 0.5rem;
-        }
-        
-        .newsletter-input {
-            flex: 1;
-            padding: 0.8rem 1.5rem;
-            border: none;
-            border-radius: 30px;
-            font-size: 1rem;
-            outline: none;
-            background-color: var(--black-dark);
-            color: var(--text-white);
-        }
-        
-        .newsletter-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-        
-        /* Footer */
-        footer {
-            background-color: var(--black-dark);
-            color: var(--text-white);
-            padding: 3rem 2rem;
-        }
-        
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 3rem;
-        }
-        
-        .footer-logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--text-white);
-            margin-bottom: 1rem;
-            display: inline-block;
-        }
-        
-        .footer-about p {
-            color: var(--text-white);
-            opacity: 0.8;
-            line-height: 1.7;
-            margin-bottom: 1.5rem;
-        }
-        
-        .social-links {
-            display: flex;
-            gap: 1rem;
-        }
-        
-        .social-link {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: var(--blue-dark);
-            display: flex;
-            align-items: center;
             justify-content: center;
-            color: var(--text-white);
-            transition: all 0.3s ease;
+            margin: 20px 0;
         }
-        
-        .social-link:hover {
-            background-color: var(--green-medium);
-            transform: translateY(-3px);
-        }
-        
-        .footer-heading {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: var(--text-white);
-        }
-        
-        .footer-links {
-            list-style: none;
-        }
-        
-        .footer-links li {
-            margin-bottom: 0.8rem;
-        }
-        
-        .footer-links a {
-            color: var(--text-white);
-            opacity: 0.8;
+        nav a {
+            color: white;
             text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
             transition: all 0.3s ease;
         }
-        
-        .footer-links a:hover {
-            color: var(--green-light);
-            opacity: 1;
+        nav a:hover {
+            color: #4eff91;
+            transform: scale(1.1);
         }
-        
-        .copyright {
+        article {
+            margin-bottom: 40px;
+        }
+        .article-title {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            color: #4eff91;
+        }
+        .article-date {
+            font-size: 0.9em;
+            color: #77b5fe;
+            margin-bottom: 15px;
+        }
+        .article-content {
+            line-height: 1.6;
+        }
+        footer {
             text-align: center;
-            padding: 1.5rem 0;
-            background-color: var(--black-pure);
-            color: var(--text-white);
-            opacity: 0.6;
-            font-size: 0.9rem;
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #77b5fe;
         }
-        
-        /* Animations */
-        @keyframes fadeUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        #admin-panel {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            background-color: rgba(0, 20, 40, 0.9);
+            padding: 20px;
+            border-bottom-left-radius: 10px;
+            z-index: 100;
         }
-        
-        @keyframes floatAnimation {
-            0% {
-                transform: translate(0, 0);
-            }
-            100% {
-                transform: translate(20px, 20px);
-            }
+        textarea, input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #001428;
+            border: 1px solid #004d40;
+            color: white;
         }
-        
-        /* Media Queries */
-        @media (max-width: 992px) {
-            .hero h1 {
-                font-size: 3rem;
-            }
-            
-            .featured-item {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-            
-            .featured-item:nth-child(even) {
-                direction: ltr;
-            }
-            
-            .footer-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        button {
+            background-color: #004d40;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
         }
-        
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .newsletter-form {
-                flex-direction: column;
-            }
-            
-            .newsletter-button {
-                width: 100%;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .footer-container {
-                grid-template-columns: 1fr;
-            }
+        button:hover {
+            background-color: #00796b;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header>
+    <canvas id="market-scene"></canvas>
+    
+    <div id="content">
+        <header>
+            <h1>Japanese Market Blog</h1>
+            <p>Exploring the vibrant culture and traditions of Japan</p>
+        </header>
+        
         <nav>
-            <a href="#" class="logo">WriteSpace</a>
-            <div class="nav-links">
-                <a href="#">Home</a>
-                <a href="#">Articles</a>
-                <a href="#">About</a>
-                <a href="#">Contact</a>
-            </div>
+            <a href="#" onclick="showHome()">Home</a>
+            <a href="#" onclick="showAbout()">About</a>
+            <a href="#" onclick="toggleAdminPanel()">Admin</a>
         </nav>
-    </header>
-    
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Exploring Ideas Through Words</h1>
-            <p>Welcome to my personal blog where I share thoughts, insights, and stories on technology, creativity, and personal growth.</p>
-            <a href="#" class="cta-button">Read Latest Articles</a>
-        </div>
-        <div class="hero-background">
-            <div class="circle circle-1"></div>
-            <div class="circle circle-2"></div>
-            <div class="circle circle-3"></div>
-        </div>
-    </section>
-    
-    <!-- Latest Articles Section -->
-    <section class="articles-section">
-        <h2 class="section-title">Latest Articles</h2>
-        <div class="articles-grid">
-            <article class="article-card">
-                <img src="/api/placeholder/400/320" alt="Article Image" class="article-img">
-                <div class="article-content">
-                    <span class="article-category">Technology</span>
-                    <h3 class="article-title">The Future of AI in Everyday Life</h3>
-                    <p class="article-excerpt">Exploring how artificial intelligence is silently transforming our daily routines and what this means for our future.</p>
-                    <div class="article-meta">
-                        <span class="article-date">March 5, 2025</span>
-                        <span class="article-read-time">5 min read</span>
-                    </div>
-                </div>
-            </article>
-            
-            <article class="article-card">
-                <img src="/api/placeholder/400/320" alt="Article Image" class="article-img">
-                <div class="article-content">
-                    <span class="article-category">Creativity</span>
-                    <h3 class="article-title">Finding Inspiration in Unexpected Places</h3>
-                    <p class="article-excerpt">How the most mundane moments in life can spark extraordinary ideas if we learn to pay attention.</p>
-                    <div class="article-meta">
-                        <span class="article-date">February 28, 2025</span>
-                        <span class="article-read-time">4 min read</span>
-                    </div>
-                </div>
-            </article>
-            
-            <article class="article-card">
-                <img src="/api/placeholder/400/320" alt="Article Image" class="article-img">
-                <div class="article-content">
-                    <span class="article-category">Growth</span>
-                    <h3 class="article-title">The Art of Deep Focus in a Distracted World</h3>
-                    <p class="article-excerpt">Practical strategies for achieving deep work in an age of constant notifications and interruptions.</p>
-                    <div class="article-meta">
-                        <span class="article-date">February 21, 2025</span>
-                        <span class="article-read-time">6 min read</span>
-                    </div>
-                </div>
-            </article>
-        </div>
-    </section>
-    
-    <!-- Featured Writing Section -->
-    <section class="featured-section">
-        <div class="featured-container">
-            <h2 class="section-title featured-title">Featured Writing</h2>
-            <div class="featured-content">
-                <div class="featured-item">
-                    <img src="/api/placeholder/400/320" alt="Featured Article" class="featured-item-img">
-                    <div class="featured-item-content">
-                        <h3>The Silent Revolution of Digital Minimalism</h3>
-                        <p>In a world obsessed with more—more features, more notifications, more content—there's a growing movement embracing the beauty of less. Digital minimalism isn't about rejecting technology but using it with intention and purpose.</p>
-                        <a href="#" class="read-more">Read full article <span>→</span></a>
-                    </div>
-                </div>
-                
-                <div class="featured-item">
-                    <img src="/api/placeholder/400/320" alt="Featured Article" class="featured-item-img">
-                    <div class="featured-item-content">
-                        <h3>Reimagining Education for the 21st Century</h3>
-                        <p>Our educational systems were designed for an industrial age that no longer exists. It's time to reimagine learning for a world where creativity, critical thinking, and adaptability matter more than memorization.</p>
-                        <a href="#" class="read-more">Read full article <span>→</span></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    
-    <!-- Newsletter Section -->
-    <section class="newsletter-section">
-        <div class="newsletter-container">
-            <h2 class="newsletter-title">Join the Conversation</h2>
-            <p class="newsletter-description">Subscribe to my newsletter to receive the latest articles, insights, and exclusive content delivered directly to your inbox.</p>
-            <form class="newsletter-form">
-                <input type="email" placeholder="Your email address" class="newsletter-input" required>
-                <button type="submit" class="cta-button">Subscribe</button>
-            </form>
-        </div>
-    </section>
-    
-    <!-- Footer -->
-    <footer>
-        <div class="footer-container">
-            <div class="footer-about">
-                <a href="#" class="footer-logo">WriteSpace</a>
-                <p>A personal blog exploring ideas at the intersection of technology, creativity, and personal growth.</p>
-                <div class="social-links">
-                    <a href="#" class="social-link">T</a>
-                    <a href="#" class="social-link">I</a>
-                    <a href="#" class="social-link">L</a>
-                    <a href="#" class="social-link">G</a>
-                </div>
-            </div>
-            
-            <div class="footer-nav">
-                <h4 class="footer-heading">Navigation</h4>
-                <ul class="footer-links">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Articles</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-categories">
-                <h4 class="footer-heading">Categories</h4>
-                <ul class="footer-links">
-                    <li><a href="#">Technology</a></li>
-                    <li><a href="#">Creativity</a></li>
-                    <li><a href="#">Personal Growth</a></li>
-                    <li><a href="#">Productivity</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-legal">
-                <h4 class="footer-heading">Legal</h4>
-                <ul class="footer-links">
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Use</a></li>
-                    <li><a href="#">Cookie Policy</a></li>
-                </ul>
-            </div>
+        
+        <div id="articles-container">
+            <!-- Articles will be loaded here -->
         </div>
         
-        <div class="copyright">
-            <p>© 2025 WriteSpace. All rights reserved.</p>
-        </div>
-    </footer>
+        <footer>
+            © 2025 Japanese Market Blog. All rights reserved.
+        </footer>
+    </div>
     
-    <script>
-        // Intersection Observer to animate articles on scroll
-        document.addEventListener('DOMContentLoaded', () => {
-            // Header scroll effect
-            const header = document.querySelector('header');
-            window.addEventListener('scroll', () => {
-                if (window.scrollY > 50) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
+    <div id="admin-panel">
+        <h2>Admin Panel</h2>
+        <input type="text" id="article-title" placeholder="Article Title">
+        <textarea id="article-content" rows="10" placeholder="Article Content"></textarea>
+        <button onclick="addArticle()">Add Article</button>
+        <button onclick="toggleAdminPanel()">Close</button>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js';
+
+        // Initialize Three.js scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / 400, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({
+            canvas: document.querySelector('#market-scene'),
+            antialias: true
+        });
+
+        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setSize(window.innerWidth, 400);
+        camera.position.set(0, 5, 15);
+        camera.lookAt(0, 3, 0);
+
+        // Create a color scheme
+        const colors = {
+            darkBlue: new THREE.Color(0x001428),
+            blue: new THREE.Color(0x0064a5),
+            lightBlue: new THREE.Color(0x77b5fe),
+            darkGreen: new THREE.Color(0x004d40),
+            green: new THREE.Color(0x00796b),
+            lightGreen: new THREE.Color(0x4eff91),
+            black: new THREE.Color(0x121212),
+            red: new THREE.Color(0x8b0000),
+            wood: new THREE.Color(0x8b4513),
+            lightWood: new THREE.Color(0xd2b48c)
+        };
+
+        // Set background - blue sky
+        scene.background = colors.lightBlue;
+        scene.fog = new THREE.Fog(colors.lightBlue, 20, 100);
+
+        // Add lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(5, 10, 7);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 1024;
+        directionalLight.shadow.mapSize.height = 1024;
+        scene.add(directionalLight);
+
+        // Enable shadows
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+        // Create ground
+        const groundGeometry = new THREE.PlaneGeometry(100, 100);
+        const groundMaterial = new THREE.MeshStandardMaterial({ 
+            color: colors.darkGreen,
+            roughness: 0.8
+        });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        scene.add(ground);
+
+        // Create market street
+        const streetGeometry = new THREE.PlaneGeometry(6, 30);
+        const streetMaterial = new THREE.MeshStandardMaterial({ 
+            color: 0x555555,
+            roughness: 0.7
+        });
+        const street = new THREE.Mesh(streetGeometry, streetMaterial);
+        street.rotation.x = -Math.PI / 2;
+        street.position.y = 0.01;
+        street.receiveShadow = true;
+        scene.add(street);
+
+        // Function to create a market stall
+        function createStall(x, z, color) {
+            const group = new THREE.Group();
+            
+            // Stall base
+            const baseGeometry = new THREE.BoxGeometry(2.5, 0.1, 2);
+            const baseMaterial = new THREE.MeshStandardMaterial({ color: colors.wood });
+            const base = new THREE.Mesh(baseGeometry, baseMaterial);
+            base.position.y = 0.05;
+            base.castShadow = true;
+            base.receiveShadow = true;
+            group.add(base);
+            
+            // Stall counter
+            const counterGeometry = new THREE.BoxGeometry(2.5, 0.8, 0.8);
+            const counterMaterial = new THREE.MeshStandardMaterial({ color: colors.lightWood });
+            const counter = new THREE.Mesh(counterGeometry, counterMaterial);
+            counter.position.set(0, 0.5, 0.5);
+            counter.castShadow = true;
+            counter.receiveShadow = true;
+            group.add(counter);
+            
+            // Stall roof
+            const roofGeometry = new THREE.ConeGeometry(2, 0.8, 4);
+            const roofMaterial = new THREE.MeshStandardMaterial({ color });
+            const roof = new THREE.Mesh(roofGeometry, roofMaterial);
+            roof.position.set(0, 2.5, 0);
+            roof.rotation.y = Math.PI / 4;
+            roof.castShadow = true;
+            group.add(roof);
+            
+            // Stall poles
+            const poleGeometry = new THREE.CylinderGeometry(0.05, 0.05, 2);
+            const poleMaterial = new THREE.MeshStandardMaterial({ color: colors.darkGreen });
+            
+            for (let i = 0; i < 4; i++) {
+                const pole = new THREE.Mesh(poleGeometry, poleMaterial);
+                const xPos = i % 2 === 0 ? -1 : 1;
+                const zPos = i < 2 ? -0.5 : 0.5;
+                pole.position.set(xPos, 1, zPos);
+                pole.castShadow = true;
+                group.add(pole);
+            }
+            
+            // Add random products on the counter
+            for (let i = 0; i < 4; i++) {
+                const productGeometry = new THREE.BoxGeometry(0.3, 0.3, 0.3);
+                const productMaterial = new THREE.MeshStandardMaterial({ 
+                    color: new THREE.Color(
+                        0.5 + Math.random() * 0.5,
+                        0.5 + Math.random() * 0.5,
+                        0.5 + Math.random() * 0.5
+                    )
+                });
+                const product = new THREE.Mesh(productGeometry, productMaterial);
+                product.position.set(
+                    -0.9 + i * 0.6,
+                    1.1,
+                    0.5
+                );
+                product.castShadow = true;
+                group.add(product);
+            }
+            
+            // Add paper lantern
+            const lanternGeometry = new THREE.SphereGeometry(0.3, 16, 8);
+            const lanternMaterial = new THREE.MeshStandardMaterial({ 
+                color: colors.red,
+                emissive: colors.red,
+                emissiveIntensity: 0.3
+            });
+            const lantern = new THREE.Mesh(lanternGeometry, lanternMaterial);
+            lantern.position.set(0, 1.8, 0.7);
+            group.add(lantern);
+            
+            // Add banner
+            const bannerGeometry = new THREE.PlaneGeometry(2, 0.5);
+            const bannerMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0xffffff,
+                side: THREE.DoubleSide
+            });
+            const banner = new THREE.Mesh(bannerGeometry, bannerMaterial);
+            banner.position.set(0, 1.8, -0.6);
+            banner.rotation.x = Math.PI * 0.05;
+            group.add(banner);
+            
+            group.position.set(x, 0, z);
+            return group;
+        }
+
+        // Create multiple stalls on both sides of the street
+        const stallColors = [
+            colors.lightBlue,
+            colors.darkGreen,
+            colors.blue,
+            colors.green,
+            colors.black
+        ];
+
+        for (let i = 0; i < 5; i++) {
+            const leftStall = createStall(-4, -6 + i * 3, stallColors[i % stallColors.length]);
+            scene.add(leftStall);
+            
+            const rightStall = createStall(4, -6 + i * 3, stallColors[(i + 2) % stallColors.length]);
+            scene.add(rightStall);
+        }
+
+        // Create people (simplified as capsules)
+        const people = [];
+        const createPerson = (x, z) => {
+            const group = new THREE.Group();
+            
+            // Body
+            const bodyGeometry = new THREE.CapsuleGeometry(0.2, 0.8, 4, 8);
+            const bodyMaterial = new THREE.MeshStandardMaterial({ 
+                color: new THREE.Color(
+                    0.1 + Math.random() * 0.3,
+                    0.1 + Math.random() * 0.3,
+                    0.1 + Math.random() * 0.6
+                )
+            });
+            const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+            body.position.y = 0.8;
+            body.castShadow = true;
+            group.add(body);
+            
+            // Head
+            const headGeometry = new THREE.SphereGeometry(0.2, 16, 8);
+            const headMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0xd2b48c
+            });
+            const head = new THREE.Mesh(headGeometry, headMaterial);
+            head.position.y = 1.5;
+            head.castShadow = true;
+            group.add(head);
+            
+            group.position.set(x, 0, z);
+            
+            // Animation data
+            group.userData = {
+                speed: 0.03 + Math.random() * 0.02,
+                direction: Math.random() > 0.5 ? 1 : -1,
+                offsetX: (Math.random() - 0.5) * 2,
+                offsetZ: (Math.random() - 0.5) * 10
+            };
+            
+            people.push(group);
+            return group;
+        };
+
+        // Add people to the scene
+        for (let i = 0; i < 20; i++) {
+            const person = createPerson(
+                (Math.random() - 0.5) * 4,
+                (Math.random() - 0.5) * 20
+            );
+            scene.add(person);
+        }
+
+        // Create traditional Japanese elements
+        
+        // Simple torii gate
+        const createTorii = () => {
+            const group = new THREE.Group();
+            
+            // Base pillars
+            const pillarGeometry = new THREE.CylinderGeometry(0.2, 0.2, 3);
+            const pillarMaterial = new THREE.MeshStandardMaterial({ color: colors.red });
+            
+            const leftPillar = new THREE.Mesh(pillarGeometry, pillarMaterial);
+            leftPillar.position.set(-1.5, 1.5, 0);
+            leftPillar.castShadow = true;
+            group.add(leftPillar);
+            
+            const rightPillar = new THREE.Mesh(pillarGeometry, pillarMaterial);
+            rightPillar.position.set(1.5, 1.5, 0);
+            rightPillar.castShadow = true;
+            group.add(rightPillar);
+            
+            // Top beams
+            const topGeometry = new THREE.BoxGeometry(4, 0.3, 0.3);
+            const topMaterial = new THREE.MeshStandardMaterial({ color: colors.red });
+            
+            const lowerTop = new THREE.Mesh(topGeometry, topMaterial);
+            lowerTop.position.set(0, 2.8, 0);
+            lowerTop.castShadow = true;
+            group.add(lowerTop);
+            
+            const upperTop = new THREE.Mesh(topGeometry, topMaterial);
+            upperTop.position.set(0, 3.1, 0);
+            upperTop.castShadow = true;
+            group.add(upperTop);
+            
+            group.position.set(0, 0, -13);
+            return group;
+        };
+        
+        const torii = createTorii();
+        scene.add(torii);
+
+        // Add some trees
+        const createTree = (x, z) => {
+            const group = new THREE.Group();
+            
+            // Trunk
+            const trunkGeometry = new THREE.CylinderGeometry(0.2, 0.3, 1.5);
+            const trunkMaterial = new THREE.MeshStandardMaterial({ color: colors.wood });
+            const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+            trunk.position.y = 0.75;
+            trunk.castShadow = true;
+            group.add(trunk);
+            
+            // Foliage
+            const foliageGeometry = new THREE.SphereGeometry(1, 16, 16);
+            const foliageMaterial = new THREE.MeshStandardMaterial({ color: colors.green });
+            const foliage = new THREE.Mesh(foliageGeometry, foliageMaterial);
+            foliage.position.y = 2;
+            foliage.castShadow = true;
+            group.add(foliage);
+            
+            group.position.set(x, 0, z);
+            return group;
+        };
+        
+        // Add trees around the scene
+        for (let i = 0; i < 15; i++) {
+            const x = (Math.random() - 0.5) * 30;
+            const z = (Math.random() - 0.5) * 30;
+            
+            // Keep trees away from the main street
+            if (Math.abs(x) > 8 || Math.abs(z) > 8) {
+                const tree = createTree(x, z);
+                scene.add(tree);
+            }
+        }
+
+        // Add some clouds
+        const clouds = [];
+        const createCloud = (x, y, z) => {
+            const group = new THREE.Group();
+            
+            const cloudGeometry = new THREE.SphereGeometry(1, 16, 16);
+            const cloudMaterial = new THREE.MeshStandardMaterial({ 
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.8
+            });
+            
+            // Create multiple spheres for a cloud-like shape
+            for (let i = 0; i < 5; i++) {
+                const cloudPiece = new THREE.Mesh(cloudGeometry, cloudMaterial);
+                cloudPiece.position.set(
+                    (Math.random() - 0.5) * 2,
+                    (Math.random() - 0.5) * 0.5,
+                    (Math.random() - 0.5) * 2
+                );
+                cloudPiece.scale.set(
+                    0.5 + Math.random() * 0.5,
+                    0.3 + Math.random() * 0.3,
+                    0.5 + Math.random() * 0.5
+                );
+                group.add(cloudPiece);
+            }
+            
+            group.position.set(x, y, z);
+            
+            // Animation data
+            group.userData = {
+                speed: 0.01 + Math.random() * 0.01
+            };
+            
+            clouds.push(group);
+            return group;
+        };
+        
+        // Add clouds to the scene
+        for (let i = 0; i < 10; i++) {
+            const cloud = createCloud(
+                (Math.random() - 0.5) * 40,
+                15 + Math.random() * 5,
+                (Math.random() - 0.5) * 40
+            );
+            scene.add(cloud);
+        }
+
+        // Add sun
+        const sunGeometry = new THREE.SphereGeometry(2, 32, 32);
+        const sunMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0xffdd00,
+            emissive: 0xffdd00,
+            emissiveIntensity: 1
+        });
+        const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+        sun.position.set(20, 20, -20);
+        scene.add(sun);
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Animate people
+            people.forEach(person => {
+                const { speed, direction, offsetX, offsetZ } = person.userData;
+                
+                person.position.z += speed * direction;
+                
+                // Have people move slightly side to side
+                person.position.x = offsetX + Math.sin(person.position.z * 0.5) * 0.5;
+                
+                // Reset position when they reach the end
+                if (person.position.z > 15 + offsetZ) {
+                    person.position.z = -15 + offsetZ;
+                } else if (person.position.z < -15 + offsetZ) {
+                    person.position.z = 15 + offsetZ;
+                }
+                
+                // Make people face their direction
+                person.rotation.y = direction > 0 ? Math.PI : 0;
+            });
+            
+            // Animate clouds
+            clouds.forEach(cloud => {
+                cloud.position.x += cloud.userData.speed;
+                
+                // Reset position when they reach the edge
+                if (cloud.position.x > 30) {
+                    cloud.position.x = -30;
                 }
             });
             
-            // Function to animate elements when they come into view
-            const animateOnScroll = (entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.animation = 'fadeUp 0.8s forwards';
-                        observer.unobserve(entry.target);
-                    }
-                });
-            };
-            
-            // Create observer for article cards
-            const articleObserver = new IntersectionObserver(animateOnScroll, {
-                root: null,
-                threshold: 0.2,
-                rootMargin: '0px 0px -100px 0px'
-            });
-            
-            // Observe all article cards
-            document.querySelectorAll('.article-card').forEach((card, index) => {
-                card.style.animationDelay = `${index * 0.2}s`;
-                articleObserver.observe(card);
-            });
-            
-            // Create observer for featured items
-            const featuredObserver = new IntersectionObserver(animateOnScroll, {
-                root: null,
-                threshold: 0.1,
-                rootMargin: '0px 0px -100px 0px'
-            });
-            
-            // Observe all featured items
-            document.querySelectorAll('.featured-item').forEach((item, index) => {
-                item.style.animationDelay = `${index * 0.3}s`;
-                featuredObserver.observe(item);
-            });
-            
-            // Animate background circles on mousemove for parallax effect
-            const hero = document.querySelector('.hero');
-            const circles = document.querySelectorAll('.circle');
-            
-            hero.addEventListener('mousemove', (e) => {
-                const x = e.clientX / window.innerWidth;
-                const y = e.clientY / window.innerHeight;
-                
-                circles.forEach((circle, index) => {
-                    const speed = (index + 1) * 20;
-                    const moveX = (x - 0.5) * speed;
-                    const moveY = (y - 0.5) * speed;
-                    
-                    circle.style.transform = `translate(${moveX}px, ${moveY}px)`;
-                });
-            });
+            renderer.render(scene, camera);
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / 400;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, 400);
         });
+
+        // Start animation
+        animate();
+
+        // Make functions available globally
+        window.showHome = showHome;
+        window.showAbout = showAbout;
+        window.toggleAdminPanel = toggleAdminPanel;
+        window.addArticle = addArticle;
+    </script>
+
+    <script>
+        // Sample articles
+        let articles = [
+            {
+                title: "The Art of Japanese Markets",
+                date: "March 15, 2025",
+                content: "Japanese markets, known as 'shotengai' or 'ichiba', are vibrant centers of community life. These bustling shopping streets offer a glimpse into everyday Japanese culture, with vendors selling everything from fresh seafood and produce to traditional crafts and modern goods. The markets are characterized by their lively atmosphere, with shopkeepers calling out to passersby and the delicious aromas of street food filling the air. In this article, we explore the rich history and cultural significance of these markets that have been at the heart of Japanese communities for centuries."
+            },
+            {
+                title: "Street Food Delights of Japanese Markets",
+                date: "March 10, 2025",
+                content: "One of the most exciting aspects of visiting a Japanese market is the incredible variety of street food available. From savory takoyaki (octopus balls) and okonomiyaki (savory pancakes) to sweet taiyaki (fish-shaped pastries filled with red bean paste) and freshly grilled mochi, the culinary offerings are endless. Each region of Japan has its own specialties, making market exploration a delicious adventure. Many of these food stalls have been operated by the same families for generations, preserving traditional recipes and cooking techniques that have been passed down through time."
+            }
+        ];
+
+        // Load articles from localStorage if available
+        const savedArticles = localStorage.getItem('blog-articles');
+        if (savedArticles) {
+            articles = JSON.parse(savedArticles);
+        }
+
+        // Display articles function
+        function displayArticles() {
+            const container = document.getElementById('articles-container');
+            container.innerHTML = '';
+            
+            articles.forEach(article => {
+                const articleElement = document.createElement('article');
+                articleElement.innerHTML = `
+                    <h2 class="article-title">${article.title}</h2>
+                    <div class="article-date">${article.date}</div>
+                    <div class="article-content">${article.content}</div>
+                `;
+                container.appendChild(articleElement);
+            });
+        }
+
+        // Show home page
+        function showHome() {
+            document.getElementById('articles-container').style.display = 'block';
+            displayArticles();
+        }
+
+        // Show about page
+        function showAbout() {
+            const container = document.getElementById('articles-container');
+            container.style.display = 'block';
+            container.innerHTML = `
+                <h2 class="article-title">About This Blog</h2>
+                <div class="article-content">
+                    <p>Welcome to my Japanese Market Blog! This space is dedicated to sharing my experiences, observations, and insights about the vibrant market culture of Japan.</p>
+                    <p>The animated header showcases a typical busy daytime scene in a Japanese market street, complete with colorful stalls, vendors, shoppers, and traditional elements like torii gates that you might find in a market near a shrine.</p>
+                    <p>I created this blog to document my travels through Japan and my fascination with its market culture — the food, the crafts, the people, and the traditions that make these spaces so special.</p>
+                    <p>Feel free to explore the articles and check back regularly for new content about Japanese markets, culture, and traditions!</p>
+                </div>
+            `;
+        }
+
+        // Toggle admin panel
+        function toggleAdminPanel() {
+            const panel = document.getElementById('admin-panel');
+            panel.style.display = panel.style.display === 'none' || panel.style.display === '' ? 'block' : 'none';
+        }
+
+        // Add new article
+        function addArticle() {
+            const title = document.getElementById('article-title').value;
+            const content = document.getElementById('article-content').value;
+            
+            if (!title || !content) {
+                alert('Please enter both title and content');
+                return;
+            }
+            
+            const today = new Date();
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const dateString = `${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
+            
+            articles.unshift({
+                title,
+                date: dateString,
+                content
+            });
+            
+            // Save to localStorage
+            localStorage.setItem('blog-articles', JSON.stringify(articles));
+            
+            // Clear form
+            document.getElementById('article-title').value = '';
+            document.getElementById('article-content').value = '';
+            
+            // Update display
+            displayArticles();
+            toggleAdminPanel();
+        }
+
+        // Initialize
+        displayArticles();
     </script>
 </body>
 </html>
