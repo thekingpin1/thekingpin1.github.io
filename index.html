@@ -3,398 +3,826 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Blog Experience</title>
+    <title>My Personal Blog</title>
     <style>
-        body {
+        /* CSS Variables for our color scheme */
+        :root {
+            /* Blue shades */
+            --blue-dark: #1a365d;
+            --blue-medium: #2a4a7f;
+            --blue-light: #4a69bd;
+            --blue-lighter: #6889d5;
+            
+            /* Black shades */
+            --black-pure: #000000;
+            --black-dark: #121212;
+            --black-medium: #222222;
+            --black-light: #333333;
+            
+            /* Green shades */
+            --green-dark: #0a4b33;
+            --green-medium: #0c744d;
+            --green-light: #10b981;
+            --green-lighter: #34d399;
+            
+            /* Pure white for all text */
+            --text-white: #ffffff;
+        }
+        
+        * {
             margin: 0;
-            overflow: hidden;
-            font-family: 'Arial', sans-serif;
-            color: white;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
-        canvas {
-            display: block;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
+        
+        body {
+            background-color: var(--black-dark);
+            color: var(--text-white);
+            overflow-x: hidden;
         }
-        .content {
-            position: relative;
-            z-index: 1;
-            padding: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: rgba(0, 10, 20, 0.7);
-            backdrop-filter: blur(5px);
-            border-radius: 10px;
-            margin-top: 100px;
-            box-shadow: 0 0 15px rgba(0, 200, 100, 0.5);
-        }
+        
+        /* Header styling */
         header {
+            background-color: var(--black-medium);
             position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
-            padding: 10px 20px;
-            background-color: rgba(0, 20, 40, 0.8);
-            backdrop-filter: blur(5px);
-            z-index: 10;
-            box-shadow: 0 0 10px rgba(0, 150, 100, 0.6);
+            z-index: 100;
+            transition: all 0.4s ease;
         }
+        
+        header.scrolled {
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+        }
+        
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        nav ul {
-            display: flex;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-        nav ul li {
-            margin-left: 20px;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        nav a:hover {
-            color: #00ff80;
-        }
+        
         .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: white;
-        }
-        h1, h2, h3 {
-            color: #00ff80;
-        }
-        .article {
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #004444;
-        }
-        .article-meta {
-            color: #0088ff;
-            margin-bottom: 10px;
-            font-style: italic;
-        }
-        .admin-panel {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 20, 30, 0.95);
-            padding: 20px;
-            border-radius: 10px;
-            width: 80%;
-            max-width: 600px;
-            max-height: 80vh;
-            overflow-y: auto;
-            z-index: 100;
-            box-shadow: 0 0 20px rgba(0, 255, 150, 0.7);
-        }
-        .admin-panel h2 {
-            margin-top: 0;
-        }
-        .admin-panel textarea {
-            width: 100%;
-            height: 300px;
-            background-color: rgba(0, 30, 40, 1);
-            color: white;
-            border: 1px solid #006666;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        .admin-panel input[type="text"] {
-            width: 100%;
-            background-color: rgba(0, 30, 40, 1);
-            color: white;
-            border: 1px solid #006666;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-        .admin-panel button {
-            background-color: #005566;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .admin-panel button:hover {
-            background-color: #007788;
-        }
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 99;
-        }
-        .admin-link {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #001122;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-white);
             text-decoration: none;
-            transition: background-color 0.3s;
+            letter-spacing: -0.5px;
         }
-        .admin-link:hover {
-            background-color: #002244;
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
         }
-        .close-admin {
+        
+        .nav-links a {
+            color: var(--text-white);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--green-light);
+            transition: width 0.3s ease;
         }
-        .loading {
-            position: fixed;
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* Hero section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background-color: var(--black-dark);
+            padding: 0 2rem;
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            z-index: 1;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 1s forwards 0.5s;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            /* Changed from gradient text to white text with text shadow for depth */
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-white);
+            max-width: 600px;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 0.8rem 2rem;
+            background-color: var(--green-medium);
+            color: var(--text-white);
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .cta-button:hover {
+            background-color: var(--green-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        }
+        
+        .hero-background {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #001122;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            color: white;
-            font-size: 24px;
-            flex-direction: column;
+            z-index: 0;
         }
-        .loading-bar {
+        
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            transition: all 1.5s ease;
+        }
+        
+        .circle-1 {
+            width: 400px;
+            height: 400px;
+            background-color: var(--blue-dark);
+            top: -100px;
+            right: -100px;
+            animation: floatAnimation 8s infinite alternate;
+        }
+        
+        .circle-2 {
+            width: 500px;
+            height: 500px;
+            background-color: var(--green-dark);
+            bottom: -200px;
+            left: -150px;
+            animation: floatAnimation 10s infinite alternate-reverse;
+        }
+        
+        .circle-3 {
             width: 300px;
-            height: 10px;
-            background-color: #001133;
-            border-radius: 5px;
-            margin-top: 20px;
-            overflow: hidden;
+            height: 300px;
+            background-color: var(--blue-medium);
+            top: 40%;
+            right: 25%;
+            animation: floatAnimation 7s infinite alternate;
         }
-        .loading-progress {
-            height: 100%;
-            width: 0%;
-            background-color: #00aa88;
-            transition: width 0.5s;
+        
+        /* Latest Articles Section */
+        .articles-section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--black-dark);
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--text-white);
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, var(--blue-medium), var(--green-medium));
+        }
+        
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .article-card {
+            background-color: var(--black-light);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .article-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+        
+        .article-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .article-content {
+            padding: 1.5rem;
+        }
+        
+        .article-category {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background-color: var(--blue-dark);
+            color: var(--text-white);
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .article-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--text-white);
+            line-height: 1.4;
+        }
+        
+        .article-excerpt {
+            font-size: 0.95rem;
+            color: var(--text-white);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-white);
+            opacity: 0.8;
+        }
+        
+        .article-date {
+            margin-right: 1rem;
+        }
+        
+        .article-read-time::before {
+            content: "•";
+            margin-right: 0.5rem;
+        }
+        
+        /* Featured Writing Section */
+        .featured-section {
+            padding: 5rem 2rem;
+            background-color: var(--blue-dark);
+            color: var(--text-white);
+        }
+        
+        .featured-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .featured-title {
+            color: var(--text-white);
+        }
+        
+        .featured-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .featured-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        
+        .featured-item:nth-child(even) {
+            direction: rtl;
+        }
+        
+        .featured-item:nth-child(even) .featured-item-content {
+            direction: ltr;
+        }
+        
+        .featured-item-img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+        
+        .featured-item-content h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+            color: var(--text-white);
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .featured-item-content p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-white);
+            margin-bottom: 1.5rem;
+        }
+        
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            color: var(--green-lighter);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .read-more:hover {
+            color: var(--text-white);
+        }
+        
+        .read-more span {
+            margin-left: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .read-more:hover span {
+            transform: translateX(5px);
+        }
+        
+        /* Newsletter Section */
+        .newsletter-section {
+            padding: 6rem 2rem;
+            background: linear-gradient(135deg, var(--green-dark), var(--black-medium));
+            color: var(--text-white);
+        }
+        
+        .newsletter-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .newsletter-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-white);
+        }
+        
+        .newsletter-description {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            color: var(--text-white);
+        }
+        
+        .newsletter-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+            gap: 0.5rem;
+        }
+        
+        .newsletter-input {
+            flex: 1;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            outline: none;
+            background-color: var(--black-dark);
+            color: var(--text-white);
+        }
+        
+        .newsletter-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--black-dark);
+            color: var(--text-white);
+            padding: 3rem 2rem;
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+        }
+        
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-white);
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        
+        .footer-about p {
+            color: var(--text-white);
+            opacity: 0.8;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-link {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--blue-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-white);
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background-color: var(--green-medium);
+            transform: translateY(-3px);
+        }
+        
+        .footer-heading {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-white);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-white);
+            opacity: 0.8;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--green-light);
+            opacity: 1;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding: 1.5rem 0;
+            background-color: var(--black-pure);
+            color: var(--text-white);
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+        
+        /* Animations */
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes floatAnimation {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(20px, 20px);
+            }
+        }
+        
+        /* Media Queries */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .featured-item {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .featured-item:nth-child(even) {
+                direction: ltr;
+            }
+            
+            .footer-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+            }
+            
+            .newsletter-button {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="loading">
-        <div>Loading Your 3D Blog Experience...</div>
-        <div class="loading-bar">
-            <div class="loading-progress" id="loadingProgress"></div>
-        </div>
-    </div>
-
+    <!-- Header -->
     <header>
         <nav>
-            <div class="logo">3D Blog</div>
-            <ul>
-                <li><a href="#" class="nav-link" data-page="home">Home</a></li>
-                <li><a href="#" class="nav-link" data-page="about">About</a></li>
-                <li><a href="#" class="nav-link" data-page="articles">Articles</a></li>
-                <li><a href="#" class="nav-link" data-page="contact">Contact</a></li>
-            </ul>
+            <a href="#" class="logo">WriteSpace</a>
+            <div class="nav-links">
+                <a href="#">Home</a>
+                <a href="#">Articles</a>
+                <a href="#">About</a>
+                <a href="#">Contact</a>
+            </div>
         </nav>
     </header>
-
-    <div class="content" id="content">
-        <!-- Content will be loaded here -->
-    </div>
-
-    <a href="#" class="admin-link" id="adminLink">Admin</a>
-
-    <div class="overlay" id="overlay"></div>
-    <div class="admin-panel" id="adminPanel">
-        <button class="close-admin" id="closeAdmin">×</button>
-        <h2>Admin Panel</h2>
-        <div>
-            <h3>Add New Article</h3>
-            <input type="text" id="articleTitle" placeholder="Article Title">
-            <textarea id="articleContent" placeholder="Article Content (Markdown supported)"></textarea>
-            <button id="saveArticle">Save Article</button>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Exploring Ideas Through Words</h1>
+            <p>Welcome to my personal blog where I share thoughts, insights, and stories on technology, creativity, and personal growth.</p>
+            <a href="#" class="cta-button">Read Latest Articles</a>
         </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.2/marked.min.js"></script>
-    <script>
-        // Global variables
-        let camera, scene, renderer;
-        let particles, particlesGeometry;
-        let clock = new THREE.Clock();
-        let mouseX = 0, mouseY = 0;
-        let windowHalfX = window.innerWidth / 2;
-        let windowHalfY = window.innerHeight / 2;
-        let targetRotation = 0;
-        let blogData = {
-            articles: [
-                {
-                    id: 1,
-                    title: "Welcome to My 3D Blog",
-                    date: "March 17, 2025",
-                    content: "# Welcome to My 3D Blog\n\nThis is my first article on this amazing Three.js powered blog. I'm excited to share my thoughts and ideas in this beautiful 3D environment.\n\n## What to Expect\n\nIn this blog, I'll be writing about:\n\n- Creative coding\n- Web development\n- My personal projects\n- Thoughts on technology\n\nStay tuned for more content coming soon!",
-                },
-                {
-                    id: 2,
-                    title: "The Beauty of Three.js",
-                    date: "March 18, 2025",
-                    content: "# The Beauty of Three.js\n\nThree.js is a powerful JavaScript library that makes it easy to create 3D graphics in the browser. It abstracts away the complexities of WebGL and provides a simple API for creating stunning visualizations.\n\n## Why I Love Three.js\n\nThree.js allows me to express my creativity in ways that traditional web development can't. The ability to create immersive 3D experiences directly in the browser is truly revolutionary.\n\nI'm looking forward to exploring more of its capabilities in future projects!"
-                }
-            ],
-            pages: {
-                home: "# Welcome to My 3D Blog\n\nThis is a personal blog built with Three.js, featuring a beautiful 3D background animation with particles that react to your mouse movements.\n\n## Latest Articles\n\n<div id='latest-articles'></div>",
-                about: "# About Me\n\nI'm a passionate developer and writer who loves exploring the intersection of technology and creativity. This blog is my space to share my thoughts, projects, and experiences.\n\n## My Background\n\nI've been working in web development for several years, with a particular interest in creative coding and interactive experiences. Three.js has become one of my favorite tools for bringing ideas to life in the browser.",
-                contact: "# Get In Touch\n\nI'd love to hear from you! You can reach me through any of these channels:\n\n- Email: example@email.com\n- Twitter: @example\n- GitHub: github.com/example",
-            }
-        };
-
-        // Initialize the loading screen
-        const loadingScreen = document.querySelector('.loading');
-        const loadingProgress = document.getElementById('loadingProgress');
-        let loadingPercentage = 0;
-        const loadingInterval = setInterval(() => {
-            loadingPercentage += 1;
-            loadingProgress.style.width = `${loadingPercentage}%`;
-            if (loadingPercentage >= 100) {
-                clearInterval(loadingInterval);
-                setTimeout(() => {
-                    loadingScreen.style.display = 'none';
-                }, 500);
-            }
-        }, 30);
-
-        // Initialize the scene
-        init();
-        animate();
-
-        // Load the initial content
-        loadPage('home');
-
-        // Event listeners
-        document.addEventListener('mousemove', onDocumentMouseMove);
-        window.addEventListener('resize', onWindowResize);
+        <div class="hero-background">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            <div class="circle circle-3"></div>
+        </div>
+    </section>
+    
+    <!-- Latest Articles Section -->
+    <section class="articles-section">
+        <h2 class="section-title">Latest Articles</h2>
+        <div class="articles-grid">
+            <article class="article-card">
+                <img src="/api/placeholder/400/320" alt="Article Image" class="article-img">
+                <div class="article-content">
+                    <span class="article-category">Technology</span>
+                    <h3 class="article-title">The Future of AI in Everyday Life</h3>
+                    <p class="article-excerpt">Exploring how artificial intelligence is silently transforming our daily routines and what this means for our future.</p>
+                    <div class="article-meta">
+                        <span class="article-date">March 5, 2025</span>
+                        <span class="article-read-time">5 min read</span>
+                    </div>
+                </div>
+            </article>
+            
+            <article class="article-card">
+                <img src="/api/placeholder/400/320" alt="Article Image" class="article-img">
+                <div class="article-content">
+                    <span class="article-category">Creativity</span>
+                    <h3 class="article-title">Finding Inspiration in Unexpected Places</h3>
+                    <p class="article-excerpt">How the most mundane moments in life can spark extraordinary ideas if we learn to pay attention.</p>
+                    <div class="article-meta">
+                        <span class="article-date">February 28, 2025</span>
+                        <span class="article-read-time">4 min read</span>
+                    </div>
+                </div>
+            </article>
+            
+            <article class="article-card">
+                <img src="/api/placeholder/400/320" alt="Article Image" class="article-img">
+                <div class="article-content">
+                    <span class="article-category">Growth</span>
+                    <h3 class="article-title">The Art of Deep Focus in a Distracted World</h3>
+                    <p class="article-excerpt">Practical strategies for achieving deep work in an age of constant notifications and interruptions.</p>
+                    <div class="article-meta">
+                        <span class="article-date">February 21, 2025</span>
+                        <span class="article-read-time">6 min read</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+    
+    <!-- Featured Writing Section -->
+    <section class="featured-section">
+        <div class="featured-container">
+            <h2 class="section-title featured-title">Featured Writing</h2>
+            <div class="featured-content">
+                <div class="featured-item">
+                    <img src="/api/placeholder/400/320" alt="Featured Article" class="featured-item-img">
+                    <div class="featured-item-content">
+                        <h3>The Silent Revolution of Digital Minimalism</h3>
+                        <p>In a world obsessed with more—more features, more notifications, more content—there's a growing movement embracing the beauty of less. Digital minimalism isn't about rejecting technology but using it with intention and purpose.</p>
+                        <a href="#" class="read-more">Read full article <span>→</span></a>
+                    </div>
+                </div>
+                
+                <div class="featured-item">
+                    <img src="/api/placeholder/400/320" alt="Featured Article" class="featured-item-img">
+                    <div class="featured-item-content">
+                        <h3>Reimagining Education for the 21st Century</h3>
+                        <p>Our educational systems were designed for an industrial age that no longer exists. It's time to reimagine learning for a world where creativity, critical thinking, and adaptability matter more than memorization.</p>
+                        <a href="#" class="read-more">Read full article <span>→</span></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Newsletter Section -->
+    <section class="newsletter-section">
+        <div class="newsletter-container">
+            <h2 class="newsletter-title">Join the Conversation</h2>
+            <p class="newsletter-description">Subscribe to my newsletter to receive the latest articles, insights, and exclusive content delivered directly to your inbox.</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Your email address" class="newsletter-input" required>
+                <button type="submit" class="cta-button">Subscribe</button>
+            </form>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <a href="#" class="footer-logo">WriteSpace</a>
+                <p>A personal blog exploring ideas at the intersection of technology, creativity, and personal growth.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link">T</a>
+                    <a href="#" class="social-link">I</a>
+                    <a href="#" class="social-link">L</a>
+                    <a href="#" class="social-link">G</a>
+                </div>
+            </div>
+            
+            <div class="footer-nav">
+                <h4 class="footer-heading">Navigation</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Articles</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-categories">
+                <h4 class="footer-heading">Categories</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Technology</a></li>
+                    <li><a href="#">Creativity</a></li>
+                    <li><a href="#">Personal Growth</a></li>
+                    <li><a href="#">Productivity</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-legal">
+                <h4 class="footer-heading">Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
         
-        // Navigation links
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const page = e.target.getAttribute('data-page');
-                loadPage(page);
-            });
-        });
-
-        // Admin panel
-        document.getElementById('adminLink').addEventListener('click', (e) => {
-            e.preventDefault();
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('adminPanel').style.display = 'block';
-        });
-
-        document.getElementById('closeAdmin').addEventListener('click', () => {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('adminPanel').style.display = 'none';
-        });
-
-        document.getElementById('saveArticle').addEventListener('click', saveArticle);
-
-        // Functions
-        function init() {
-            // Create the camera
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
-            camera.position.z = 1000;
-
-            // Create the scene
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x000a14);
-            scene.fog = new THREE.FogExp2(0x000a14, 0.0007);
-
-            // Create particles
-            particlesGeometry = new THREE.BufferGeometry();
-            const particleCount = 5000;
-            const positions = new Float32Array(particleCount * 3);
-            const colors = new Float32Array(particleCount * 3);
-            const sizes = new Float32Array(particleCount);
-
-            const color1 = new THREE.Color(0x003366); // Dark blue
-            const color2 = new THREE.Color(0x006633); // Dark green
-            const color3 = new THREE.Color(0x000000); // Black
-
-            for (let i = 0; i < particleCount; i++) {
-                // Position
-                positions[i * 3] = (Math.random() - 0.5) * 2000;
-                positions[i * 3 + 1] = (Math.random() - 0.5) * 2000;
-                positions[i * 3 + 2] = (Math.random() - 0.5) * 2000;
-
-                // Color
-                const colorRandom = Math.random();
-                let particleColor;
-                if (colorRandom < 0.33) {
-                    particleColor = color1;
-                } else if (colorRandom < 0.66) {
-                    particleColor = color2;
+        <div class="copyright">
+            <p>© 2025 WriteSpace. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Intersection Observer to animate articles on scroll
+        document.addEventListener('DOMContentLoaded', () => {
+            // Header scroll effect
+            const header = document.querySelector('header');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
                 } else {
-                    particleColor = color3;
+                    header.classList.remove('scrolled');
                 }
-
-                colors[i * 3] = particleColor.r;
-                colors[i * 3 + 1] = particleColor.g;
-                colors[i * 3 + 2] = particleColor.b;
-
-                // Size
-                sizes[i] = Math.random() * 5 + 1;
-            }
-
-            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-            particlesGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-
-            // Create material
-            const particlesMaterial = new THREE.PointsMaterial({
-                size: 5,
-                sizeAttenuation: true,
-                vertexColors: true,
-                transparent: true,
-                opacity: 0.8
             });
-
-            // Create points
-            particles = new THREE.Points(particlesGeometry, particlesMaterial);
-            scene.add(particles);
-
-            // Create renderer
-            renderer = new THREE.WebGLRenderer();
-            renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            render();
-        }
-
-        function render() {
-            const time = clock.getElapsedTime() * 0.1;
-
-            // Rotate particles
-            particles.rotation.x = time * 0.1;
-            particles.rotation.y = time * 0.05;
+            
+            // Function to animate elements when they come into view
+            const animateOnScroll = (entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'fadeUp 0.8s forwards';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            };
+            
+            // Create observer for article cards
+            const articleObserver = new IntersectionObserver(animateOnScroll, {
+                root: null,
+                threshold: 0.2,
+                rootMargin: '0px 0px -100px 0px'
+            });
+            
+            // Observe all article cards
+            document.querySelectorAll('.article-card').forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.2}s`;
+                articleObserver.observe(card);
+            });
+            
+            // Create observer for featured items
+            const featuredObserver = new IntersectionObserver(animateOnScroll, {
+                root: null,
+                threshold: 0.1,
+                rootMargin: '0px 0px -100px 0px'
+            });
+            
+            // Observe all featured items
+            document.querySelectorAll('.featured-item').forEach((item, index) => {
+                item.style.animationDelay = `${index * 0.3}s`;
+                featuredObserver.observe(item);
+            });
+            
+            // Animate background circles on mousemove for parallax effect
+            const hero = document.querySelector('.hero');
+            const circles = document.querySelectorAll('.circle');
+            
+            hero.addEventListener('mousemove', (e) => {
+                const x = e.clientX / window.innerWidth;
+                const y = e.clientY / window.innerHeight;
+                
+                circles.forEach((circle, index) => {
+                    const speed = (index + 1) * 20;
+                    const moveX = (x - 0.5) * speed;
+                    const moveY = (y - 0.5) * speed;
+                    
+                    circle.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
